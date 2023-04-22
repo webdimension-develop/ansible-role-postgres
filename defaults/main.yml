@@ -1,0 +1,6 @@
+---
+# defaults file for src/roles/postgres
+pg_owner: postgres
+pg_owner_password: "{{ secret.postgres.postgres_password }}"
+pg_group: postgres
+directory_pgdata: /var/lib/pgsql
