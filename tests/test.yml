@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - src/roles/postgres
+    - roles/ansible-role-postgres
