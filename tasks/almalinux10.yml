@@ -1,0 +1,40 @@
+---
+- name: Check installed postgres
+  command: bash -lc "psql -V"
+  register: psql_exists
+  changed_when: false
+  ignore_errors: true
+
+- name: Group Add
+  become: true
+  group:
+    name: "{{ pg_group }}"
+
+- name: User Add
+  become: true
+  user:
+    name: "{{ pg_owner }}"
+    password: "{{ pg_owner_password }}"
+    group: "{{ pg_group }}"
+
+- name: Install postgresql
+  become: true
+  dnf:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - postgresql
+    - postgresql-server
+
+- name: Init postgres
+  become: true
+  command: /usr/bin/postgresql-setup --initdb
+  when:
+    - psql_exists is failed
+
+- name: Auto Start
+  become: true
+  service:
+    name: postgresql
+    state: started
+    enabled: true
